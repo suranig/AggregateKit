@@ -26,13 +26,22 @@ make build
 # Run tests
 make test
 
+# Run tests with code coverage
+make test-coverage
+
+# Run benchmarks (full)
+make benchmark
+
+# Run benchmarks (quick mode)
+make benchmark-quick
+
 # Create NuGet package
 make pack
 
 # Clean build artifacts
 make clean
 
-# Full CI pipeline (build, test, pack)
+# Full CI pipeline (build, test, coverage, pack)
 make ci-pipeline
 ```
 
@@ -44,6 +53,9 @@ make docker-build
 
 # Run tests in Docker
 make docker-test
+
+# Run tests with code coverage in Docker
+make docker-test-coverage
 
 # Create NuGet package in Docker
 make docker-pack
@@ -70,6 +82,55 @@ make push-tags
 # Complete release workflow
 make release-workflow
 ```
+
+## Project Structure
+
+```
+AggregateKit/
+├── src/                      # Source code
+│   └── AggregateKit/         # Core library
+├── tests/                    # Test projects
+│   └── AggregateKit.Tests/   # Unit tests
+├── benchmarks/               # Performance benchmarks
+│   └── AggregateKit.Benchmarks/ # Benchmark project
+├── .github/                  # GitHub specific files
+│   └── workflows/            # GitHub Actions workflows
+├── artifacts/                # Build outputs (NuGet packages)
+├── TestResults/              # Test results and coverage reports
+│   └── Coverage/             # Test coverage reports
+└── BenchmarkDotNet.Artifacts/ # Benchmark results
+```
+
+## Testing
+
+### Running Tests
+
+```bash
+# Run all tests
+dotnet test
+
+# Run tests with code coverage
+make test-coverage
+```
+
+### Test Coverage
+
+Code coverage reports are generated using Coverlet and ReportGenerator. 
+To view the coverage report, run `make test-coverage` and open the HTML report at `TestResults/Coverage/Reports/index.html`.
+
+## Performance Benchmarks
+
+Performance benchmarks are implemented using BenchmarkDotNet. 
+
+```bash
+# Run full benchmarks (takes longer)
+make benchmark
+
+# Run quick benchmarks (faster, less accurate)
+make benchmark-quick
+```
+
+Benchmark results are saved to the `BenchmarkDotNet.Artifacts` directory.
 
 ## Docker
 
