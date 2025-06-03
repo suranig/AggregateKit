@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8C9D6A55
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregateKit.Tests", "tests\AggregateKit.Tests\AggregateKit.Tests.csproj", "{5D7A80A2-F6D9-4FEC-B470-1840BEAA3D23}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{49601FDE-C83F-4B25-A488-240CD825890B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregateKit.Benchmarks", "benchmarks\AggregateKit.Benchmarks\AggregateKit.Benchmarks.csproj", "{2F7D7EE6-02FC-4E78-972E-B2FE734CB815}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,9 +32,14 @@ Global
 		{5D7A80A2-F6D9-4FEC-B470-1840BEAA3D23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D7A80A2-F6D9-4FEC-B470-1840BEAA3D23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D7A80A2-F6D9-4FEC-B470-1840BEAA3D23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F7D7EE6-02FC-4E78-972E-B2FE734CB815}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F7D7EE6-02FC-4E78-972E-B2FE734CB815}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F7D7EE6-02FC-4E78-972E-B2FE734CB815}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F7D7EE6-02FC-4E78-972E-B2FE734CB815}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DFC147A2-93DA-4950-B5F5-1EDB916C27B2} = {D7634B4A-9369-424B-8ACD-49A2427FC1C3}
 		{5D7A80A2-F6D9-4FEC-B470-1840BEAA3D23} = {8C9D6A55-8153-4D8A-B273-930F047EE153}
+		{2F7D7EE6-02FC-4E78-972E-B2FE734CB815} = {49601FDE-C83F-4B25-A488-240CD825890B}
 	EndGlobalSection
 EndGlobal
