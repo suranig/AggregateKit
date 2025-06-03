@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <PackageId>AggregateKit</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>ppilichowski</Authors>
+    <Company>ppilichowski</Company>
+    <Description>Lightweight building blocks for Domain-Driven Design in .NET</Description>
+    <PackageTags>ddd, domain-driven-design, aggregate-root, value-object, entity, kernel</PackageTags>
+    <RepositoryUrl>https://github.com/ppilichowski/AggregateKit</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable" Version="9.0.5" />
+  </ItemGroup>
+
+</Project>
