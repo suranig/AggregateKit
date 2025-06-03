@@ -1,4 +1,4 @@
-.PHONY: build test pack clean docker-build docker-test docker-pack
+.PHONY: build test test-coverage pack clean benchmark docker-build docker-test docker-test-coverage docker-pack
 
 # Local development commands
 build:
@@ -7,6 +7,19 @@ build:
 test:
 	dotnet test
 
+test-coverage:
+	mkdir -p ./TestResults/Coverage
+	dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./TestResults/Coverage/coverage.cobertura.xml
+	dotnet tool install -g dotnet-reportgenerator-globaltool || true
+	reportgenerator "-reports:./TestResults/Coverage/coverage.cobertura.xml" "-targetdir:./TestResults/Coverage/Reports" "-reporttypes:Html;Badges"
+	@echo "Coverage report generated at ./TestResults/Coverage/Reports/index.html"
+
+benchmark:
+	dotnet run --project benchmarks/AggregateKit.Benchmarks/AggregateKit.Benchmarks.csproj -c Release
+
+benchmark-quick:
+	dotnet run --project benchmarks/AggregateKit.Benchmarks/AggregateKit.Benchmarks.csproj -c Release -- --job short --warmupCount 1 --iterationCount 3
+
 pack:
 	dotnet pack src/AggregateKit/AggregateKit.csproj --output ./artifacts
 
@@ -14,6 +27,7 @@ clean:
 	dotnet clean
 	rm -rf ./artifacts
 	rm -rf ./TestResults
+	rm -rf ./BenchmarkDotNet.Artifacts
 	find . -name "bin" -type d -exec rm -rf {} +
 	find . -name "obj" -type d -exec rm -rf {} +
 
@@ -25,13 +39,20 @@ docker-test:
 	docker-compose build test
 	docker-compose run --rm test
 
+docker-test-coverage:
+	mkdir -p ./TestResults/Coverage
+	docker-compose run --rm -v $(PWD)/TestResults:/app/TestResults test dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=/app/TestResults/Coverage/coverage.cobertura.xml
+	dotnet tool install -g dotnet-reportgenerator-globaltool || true
+	reportgenerator "-reports:./TestResults/Coverage/coverage.cobertura.xml" "-targetdir:./TestResults/Coverage/Reports" "-reporttypes:Html;Badges"
+	@echo "Coverage report generated at ./TestResults/Coverage/Reports/index.html"
+
 docker-pack:
 	mkdir -p ./artifacts
 	docker-compose build pack
 	docker-compose run --rm pack
 
 # CI pipeline helpers
-ci-pipeline: build test pack
+ci-pipeline: build test test-coverage pack
 
 # Release helpers
 release-patch:
@@ -82,11 +103,13 @@ release-workflow:
 	@echo "Starting release workflow..."
 	@echo "1. Clean and build"
 	$(MAKE) clean build
-	@echo "2. Run tests"
-	$(MAKE) test
-	@echo "3. Tag version"
+	@echo "2. Run tests with coverage"
+	$(MAKE) test-coverage
+	@echo "3. Run quick benchmarks"
+	$(MAKE) benchmark-quick
+	@echo "4. Tag version"
 	$(MAKE) tag-version
-	@echo "4. Create NuGet package"
+	@echo "5. Create NuGet package"
 	$(MAKE) pack
 	@echo "Release workflow completed! To publish:"
 	@echo "- Run 'git push' to push commits"
