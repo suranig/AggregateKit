@@ -5,7 +5,7 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <PackageId>AggregateKit</PackageId>
-    <Version>1.0.0</Version>
+    <Version>0.1.0</Version>
     <Authors>ppilichowski</Authors>
     <Company>ppilichowski</Company>
     <Description>Lightweight building blocks for Domain-Driven Design in .NET</Description>
