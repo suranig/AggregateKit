@@ -157,6 +157,23 @@ else
 }
 ```
 
+## Development
+
+This project includes Docker support and a Makefile for development workflows:
+
+```bash
+# Run tests
+make test
+
+# Run tests in Docker
+make docker-test
+
+# Build the package
+make pack
+```
+
+See [DEVELOPMENT.md](DEVELOPMENT.md) for complete development instructions.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
