@@ -174,6 +174,7 @@ The GitHub Actions workflow defined in `.github/workflows/ci.yml` automatically:
 3. Create a tag: `git tag v1.0.1` (or use `make tag-version`)
 4. Push the changes: `git push && git push --tags` (or use `make push-tags` after pushing commits)
 5. The GitHub Actions workflow will automatically publish the NuGet package
+6. Ensure the repository has a secret named `NUGET_API_KEY` containing your NuGet.org API key
 
 ## Code Contribution Guidelines
 
