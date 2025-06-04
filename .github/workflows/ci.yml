@@ -16,13 +16,12 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 8.0.x
+    - name: Run tests in Docker
+      run: make docker-test
 
-    - name: Run CI pipeline
-      run: make ci-pipeline
+    - name: Build NuGet package
+      if: success() && github.event_name != 'pull_request'
+      run: make docker-pack
 
     - name: Upload artifacts
       if: success() && github.event_name != 'pull_request'
