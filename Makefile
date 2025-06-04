@@ -33,23 +33,23 @@ clean:
 
 # Docker commands
 docker-build:
-	docker-compose build build
+	docker compose build build
 
 docker-test:
-	docker-compose build test
-	docker-compose run --rm test
+	docker compose build test
+	docker compose run --rm test
 
 docker-test-coverage:
 	mkdir -p ./TestResults/Coverage
-	docker-compose run --rm -v $(PWD)/TestResults:/app/TestResults test dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=/app/TestResults/Coverage/coverage.cobertura.xml
+	docker compose run --rm -v $(PWD)/TestResults:/app/TestResults test dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=/app/TestResults/Coverage/coverage.cobertura.xml
 	dotnet tool install -g dotnet-reportgenerator-globaltool || true
 	reportgenerator "-reports:./TestResults/Coverage/coverage.cobertura.xml" "-targetdir:./TestResults/Coverage/Reports" "-reporttypes:Html;Badges"
 	@echo "Coverage report generated at ./TestResults/Coverage/Reports/index.html"
 
 docker-pack:
 	mkdir -p ./artifacts
-	docker-compose build pack
-	docker-compose run --rm pack
+	docker compose build pack
+	docker compose run --rm pack
 
 # CI pipeline helpers
 ci-pipeline: build test test-coverage pack
