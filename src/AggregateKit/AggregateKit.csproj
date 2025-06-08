@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <PackageId>AggregateKit</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>ppilichowski</Authors>
     <Company>ppilichowski</Company>
     <Description>Lightweight building blocks for Domain-Driven Design in .NET</Description>
@@ -18,10 +18,6 @@
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" Version="9.0.5" />
   </ItemGroup>
 
 </Project>
