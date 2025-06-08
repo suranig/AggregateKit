@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace AggregateKit
 {
@@ -7,13 +8,15 @@ namespace AggregateKit
     /// Entities are equality-comparable by identity, not by attributes.
     /// </summary>
     /// <typeparam name="TId">The type of the identity of the entity.</typeparam>
-    public abstract class Entity<TId> where TId : notnull
+    public abstract class Entity<TId> : IEquatable<Entity<TId>> where TId : notnull
     {
         public TId Id { get; protected set; } = default!;
 
         protected Entity(TId id)
         {
-            if (object.Equals(id, default(TId)))
+            ArgumentNullException.ThrowIfNull(id);
+            
+            if (EqualityComparer<TId>.Default.Equals(id, default))
             {
                 throw new ArgumentException("The ID cannot be the default value.", nameof(id));
             }
@@ -22,34 +25,30 @@ namespace AggregateKit
         }
 
         // EF Core requires a parameterless constructor
-        protected Entity() {}
+        protected Entity() { }
+
+        public bool Equals(Entity<TId>? other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if (GetType() != other.GetType()) return false;
+            
+            return EqualityComparer<TId>.Default.Equals(Id, other.Id);
+        }
 
         public override bool Equals(object? obj)
         {
-            if (obj == null || obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            var other = (Entity<TId>)obj;
-            
-            return Id.Equals(other.Id);
+            return Equals(obj as Entity<TId>);
         }
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode();
+            return EqualityComparer<TId>.Default.GetHashCode(Id);
         }
 
         public static bool operator ==(Entity<TId>? left, Entity<TId>? right)
         {
-            if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
-                return true;
-                
-            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
-                return false;
-                
-            return left.Equals(right);
+            return EqualityComparer<Entity<TId>>.Default.Equals(left, right);
         }
 
         public static bool operator !=(Entity<TId>? left, Entity<TId>? right)
