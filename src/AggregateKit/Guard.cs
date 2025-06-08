@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace AggregateKit
 {
@@ -15,12 +17,9 @@ namespace AggregateKit
         /// <param name="value">The value to check.</param>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <exception cref="ArgumentNullException">Thrown when the value is null.</exception>
-        public static void AgainstNull(object? value, string parameterName)
+        public static void AgainstNull([NotNull] object? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(parameterName);
-            }
+            ArgumentNullException.ThrowIfNull(value, parameterName);
         }
 
         /// <summary>
@@ -29,12 +28,9 @@ namespace AggregateKit
         /// <param name="value">The string to check.</param>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <exception cref="ArgumentException">Thrown when the string is null or empty.</exception>
-        public static void AgainstNullOrEmpty(string? value, string parameterName)
+        public static void AgainstNullOrEmpty([NotNull] string? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
         {
-            if (string.IsNullOrEmpty(value))
-            {
-                throw new ArgumentException("String cannot be null or empty.", parameterName);
-            }
+            ArgumentException.ThrowIfNullOrEmpty(value, parameterName);
         }
 
         /// <summary>
@@ -43,12 +39,9 @@ namespace AggregateKit
         /// <param name="value">The string to check.</param>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <exception cref="ArgumentException">Thrown when the string is null, empty, or consists only of whitespace.</exception>
-        public static void AgainstNullOrWhiteSpace(string? value, string parameterName)
+        public static void AgainstNullOrWhiteSpace([NotNull] string? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
         {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new ArgumentException("String cannot be null, empty, or consist only of whitespace.", parameterName);
-            }
+            ArgumentException.ThrowIfNullOrWhiteSpace(value, parameterName);
         }
 
         /// <summary>
@@ -58,9 +51,9 @@ namespace AggregateKit
         /// <param name="value">The collection to check.</param>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <exception cref="ArgumentException">Thrown when the collection is null or empty.</exception>
-        public static void AgainstNullOrEmpty<T>(IEnumerable<T>? value, string parameterName)
+        public static void AgainstNullOrEmpty<T>([NotNull] IEnumerable<T>? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
         {
-            AgainstNull(value, parameterName);
+            ArgumentNullException.ThrowIfNull(value, parameterName);
             
             if (!value.Any())
             {
@@ -69,13 +62,13 @@ namespace AggregateKit
         }
 
         /// <summary>
-        /// Ensures that the specified condition is true.
+        /// Ensures that the specified condition is false.
         /// </summary>
         /// <param name="condition">The condition to check.</param>
-        /// <param name="message">The exception message to use when the condition is false.</param>
+        /// <param name="message">The exception message to use when the condition is true.</param>
         /// <param name="parameterName">The name of the parameter.</param>
-        /// <exception cref="ArgumentException">Thrown when the condition is false.</exception>
-        public static void AgainstCondition(bool condition, string message, string parameterName)
+        /// <exception cref="ArgumentException">Thrown when the condition is true.</exception>
+        public static void AgainstCondition(bool condition, string message, [CallerArgumentExpression(nameof(condition))] string? parameterName = null)
         {
             if (condition)
             {
