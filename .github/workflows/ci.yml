@@ -16,8 +16,15 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Run tests in Docker
-      run: make docker-test
+    - name: Run tests with coverage in Docker
+      run: make docker-test-coverage
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./TestResults/Coverage/coverage.cobertura.xml
+        fail_ci_if_error: true
 
     - name: Build NuGet package
       if: success() && github.event_name != 'pull_request'

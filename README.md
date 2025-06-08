@@ -1,7 +1,8 @@
 # AggregateKit
 
 [![NuGet](https://img.shields.io/nuget/v/AggregateKit.svg)](https://www.nuget.org/packages/AggregateKit)
-[![Build](https://github.com/ppilichowski/AggregateKit/actions/workflows/ci.yml/badge.svg)](https://github.com/ppilichowski/AggregateKit/actions)
+[![Build](https://github.com/suranig/AggregateKit/actions/workflows/ci.yml/badge.svg)](https://github.com/suranig/AggregateKit/actions)
+[![codecov](https://codecov.io/gh/suranig/AggregateKit/branch/main/graph/badge.svg)](https://codecov.io/gh/suranig/AggregateKit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 AggregateKit is a lightweight library providing essential building blocks for Domain-Driven Design (DDD) in .NET applications.
