@@ -10,12 +10,12 @@ namespace AggregateKit
     /// <typeparam name="TId">The type of the identity of the aggregate root.</typeparam>
     public abstract class AggregateRoot<TId> : Entity<TId> where TId : notnull
     {
-        private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
+        private readonly List<IDomainEvent> _domainEvents = [];
         
         /// <summary>
         /// Gets the domain events that have been raised by this aggregate root.
         /// </summary>
-        public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.ToImmutableList();
+        public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
         protected AggregateRoot(TId id) : base(id) 
         {
@@ -32,6 +32,7 @@ namespace AggregateKit
         /// <param name="domainEvent">The domain event to add.</param>
         protected void AddDomainEvent(IDomainEvent domainEvent)
         {
+            Guard.AgainstNull(domainEvent);
             _domainEvents.Add(domainEvent);
         }
 
@@ -43,5 +44,10 @@ namespace AggregateKit
         {
             _domainEvents.Clear();
         }
+
+        /// <summary>
+        /// Gets a value indicating whether this aggregate root has any domain events.
+        /// </summary>
+        public bool HasDomainEvents => _domainEvents.Count > 0;
     }
 } 
