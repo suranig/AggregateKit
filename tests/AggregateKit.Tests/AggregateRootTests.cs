@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -41,6 +42,15 @@ namespace AggregateKit.Tests
             public TestAggregate(Guid id) : base(id)
             {
                 AddDomainEvent(new TestEvent());
+            }
+
+            // For EF Core
+            private TestAggregate() : base() { }
+
+            // Expose AddDomainEvent for testing
+            public new void AddDomainEvent(IDomainEvent domainEvent)
+            {
+                base.AddDomainEvent(domainEvent);
             }
         }
 
@@ -137,6 +147,68 @@ namespace AggregateKit.Tests
             // Assert
             Assert.Throws<NotSupportedException>(() => collection.Add(new TestEvent()));
             Assert.Throws<NotSupportedException>(() => collection.Clear());
+        }
+
+        [Fact]
+        public void HasDomainEvents_Returns_True_When_Events_Exist()
+        {
+            // Arrange
+            var aggregate = new TestAggregate(Guid.NewGuid());
+            
+            // Act & Assert
+            Assert.True(aggregate.HasDomainEvents);
+        }
+
+        [Fact]
+        public void HasDomainEvents_Returns_False_When_No_Events()
+        {
+            // Arrange
+            var aggregate = new TestAggregate(Guid.NewGuid());
+            
+            // Act
+            aggregate.ClearDomainEvents();
+            
+            // Assert
+            Assert.False(aggregate.HasDomainEvents);
+        }
+
+        [Fact]
+        public void AddDomainEvent_Throws_When_Event_Is_Null()
+        {
+            // Arrange
+            var aggregate = new TestAggregate(Guid.NewGuid());
+            
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => aggregate.AddDomainEvent(null!));
+        }
+
+        [Fact]
+        public void AggregateRoot_Initially_Has_No_Events()
+        {
+            // Arrange & Act
+            var aggregate = new TestAggregate(Guid.NewGuid());
+            aggregate.ClearDomainEvents(); // Clear the event added in constructor
+            
+            // Assert
+            Assert.Empty(aggregate.DomainEvents);
+            Assert.False(aggregate.HasDomainEvents);
+        }
+
+        [Fact]
+        public void Multiple_Events_Can_Be_Added()
+        {
+            // Arrange
+            var aggregate = new TestAggregate(Guid.NewGuid());
+            aggregate.ClearDomainEvents(); // Start fresh
+            
+            // Act
+            aggregate.AddDomainEvent(new TestEvent());
+            aggregate.AddDomainEvent(new TestEvent());
+            aggregate.AddDomainEvent(new TestEvent());
+            
+            // Assert
+            Assert.Equal(3, aggregate.DomainEvents.Count);
+            Assert.True(aggregate.HasDomainEvents);
         }
     }
 }

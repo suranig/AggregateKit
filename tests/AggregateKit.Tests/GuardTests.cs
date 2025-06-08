@@ -10,14 +10,14 @@ namespace AggregateKit.Tests
         public void AgainstNull_Throws_When_Value_Is_Null()
         {
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => Guard.AgainstNull(null, "param"));
+            Assert.Throws<ArgumentNullException>(() => Guard.AgainstNull(null));
         }
 
         [Fact]
         public void AgainstNull_Does_Not_Throw_When_Value_Is_Not_Null()
         {
             // Act
-            Guard.AgainstNull("not null", "param");
+            Guard.AgainstNull("not null");
             
             // Assert
             // No exception means the test passes
@@ -27,21 +27,21 @@ namespace AggregateKit.Tests
         public void AgainstNullOrEmpty_Throws_When_String_Is_Null()
         {
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrEmpty(null, "param"));
+            Assert.Throws<ArgumentNullException>(() => Guard.AgainstNullOrEmpty(null));
         }
 
         [Fact]
         public void AgainstNullOrEmpty_Throws_When_String_Is_Empty()
         {
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrEmpty(string.Empty, "param"));
+            Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrEmpty(string.Empty));
         }
 
         [Fact]
         public void AgainstNullOrEmpty_Does_Not_Throw_When_String_Is_Not_Empty()
         {
             // Act
-            Guard.AgainstNullOrEmpty("not empty", "param");
+            Guard.AgainstNullOrEmpty("not empty");
             
             // Assert
             // No exception means the test passes
@@ -51,28 +51,28 @@ namespace AggregateKit.Tests
         public void AgainstNullOrWhiteSpace_Throws_When_String_Is_Null()
         {
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrWhiteSpace(null, "param"));
+            Assert.Throws<ArgumentNullException>(() => Guard.AgainstNullOrWhiteSpace(null));
         }
 
         [Fact]
         public void AgainstNullOrWhiteSpace_Throws_When_String_Is_Empty()
         {
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrWhiteSpace(string.Empty, "param"));
+            Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrWhiteSpace(string.Empty));
         }
 
         [Fact]
         public void AgainstNullOrWhiteSpace_Throws_When_String_Is_WhiteSpace()
         {
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrWhiteSpace("   ", "param"));
+            Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrWhiteSpace("   "));
         }
 
         [Fact]
         public void AgainstNullOrWhiteSpace_Does_Not_Throw_When_String_Is_Not_WhiteSpace()
         {
             // Act
-            Guard.AgainstNullOrWhiteSpace("not whitespace", "param");
+            Guard.AgainstNullOrWhiteSpace("not whitespace");
             
             // Assert
             // No exception means the test passes
@@ -83,21 +83,21 @@ namespace AggregateKit.Tests
         {
             // Act & Assert
             IEnumerable<int>? nullCollection = null;
-            Assert.Throws<ArgumentNullException>(() => Guard.AgainstNullOrEmpty(nullCollection, "param"));
+            Assert.Throws<ArgumentNullException>(() => Guard.AgainstNullOrEmpty(nullCollection));
         }
 
         [Fact]
         public void AgainstNullOrEmpty_Collection_Throws_When_Collection_Is_Empty()
         {
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrEmpty(new List<int>(), "param"));
+            Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrEmpty(new List<int>()));
         }
 
         [Fact]
         public void AgainstNullOrEmpty_Collection_Does_Not_Throw_When_Collection_Is_Not_Empty()
         {
             // Act
-            Guard.AgainstNullOrEmpty(new[] { 1, 2, 3 }, "param");
+            Guard.AgainstNullOrEmpty(new[] { 1, 2, 3 });
             
             // Assert
             // No exception means the test passes
@@ -108,14 +108,14 @@ namespace AggregateKit.Tests
         {
             // Act & Assert
             Assert.Throws<ArgumentException>(() => 
-                Guard.AgainstCondition(true, "Error message", "param"));
+                Guard.AgainstCondition(true, "Error message"));
         }
 
         [Fact]
         public void AgainstCondition_Does_Not_Throw_When_Condition_Is_False()
         {
             // Act
-            Guard.AgainstCondition(false, "Error message", "param");
+            Guard.AgainstCondition(false, "Error message");
             
             // Assert
             // No exception means the test passes
