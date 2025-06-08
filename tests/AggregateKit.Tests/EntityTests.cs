@@ -31,6 +31,19 @@ namespace AggregateKit.Tests
         }
 
         [Fact]
+        public void Entity_Self_Equality()
+        {
+            // Arrange
+            var entity = new TestEntity(Guid.NewGuid(), "Entity");
+            var sameReference = entity; // two variables referencing the same object
+
+            // Act & Assert
+            Assert.True(entity == sameReference);
+            Assert.False(entity != sameReference);
+            Assert.True(entity.Equals(sameReference));
+        }
+
+        [Fact]
         public void Entity_With_Different_Id_Is_Not_Equal()
         {
             // Arrange
