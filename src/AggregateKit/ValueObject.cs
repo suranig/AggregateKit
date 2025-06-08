@@ -8,7 +8,7 @@ namespace AggregateKit
     /// Base class for all Value Objects in Domain-Driven Design.
     /// Value Objects are equality-comparable by value, not by reference.
     /// </summary>
-    public abstract class ValueObject
+    public abstract class ValueObject : IEquatable<ValueObject>
     {
         /// <summary>
         /// When overridden in a derived class, returns all components of the value object
@@ -17,34 +17,33 @@ namespace AggregateKit
         /// <returns>Enumerable of all equality components.</returns>
         protected abstract IEnumerable<object?> GetEqualityComponents();
 
-        public override bool Equals(object? obj)
+        public bool Equals(ValueObject? other)
         {
-            if (obj == null || obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            var other = (ValueObject)obj;
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if (GetType() != other.GetType()) return false;
             
             return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
         }
 
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as ValueObject);
+        }
+
         public override int GetHashCode()
         {
-            return GetEqualityComponents()
-                .Select(x => x != null ? x.GetHashCode() : 0)
-                .Aggregate((x, y) => x ^ y);
+            var hashCode = new HashCode();
+            foreach (var component in GetEqualityComponents())
+            {
+                hashCode.Add(component);
+            }
+            return hashCode.ToHashCode();
         }
 
         public static bool operator ==(ValueObject? left, ValueObject? right)
         {
-            if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
-                return true;
-                
-            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
-                return false;
-                
-            return left.Equals(right);
+            return EqualityComparer<ValueObject>.Default.Equals(left, right);
         }
 
         public static bool operator !=(ValueObject? left, ValueObject? right)
