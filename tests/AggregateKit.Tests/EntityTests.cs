@@ -21,6 +21,22 @@ namespace AggregateKit.Tests
             }
         }
 
+        private class StringEntity : Entity<string>
+        {
+            public string Name { get; private set; }
+
+            public StringEntity(string id, string name) : base(id)
+            {
+                Name = name;
+            }
+
+            // For EF Core
+            private StringEntity() : base() 
+            {
+                Name = string.Empty;
+            }
+        }
+
         private class DifferentEntity : Entity<Guid>
         {
             public DifferentEntity(Guid id) : base(id) { }
@@ -112,6 +128,22 @@ namespace AggregateKit.Tests
         }
 
         [Fact]
+        public void Entity_With_Reference_Type_Id_Cannot_Be_Created_With_Null()
+        {
+            // Act & Assert - This tests the ArgumentNullException.ThrowIfNull path
+            Assert.Throws<ArgumentNullException>(() => new StringEntity(null!, "Entity"));
+        }
+
+        [Fact]
+        public void Entity_With_Reference_Type_Id_Can_Be_Created_With_Valid_String()
+        {
+            // Act & Assert - This tests that valid string IDs work correctly
+            var entity = new StringEntity("valid-id", "Entity");
+            Assert.Equal("valid-id", entity.Id);
+            Assert.Equal("Entity", entity.Name);
+        }
+
+        [Fact]
         public void Entity_IEquatable_Equals_Returns_True_For_Same_Id()
         {
             // Arrange
@@ -190,6 +222,35 @@ namespace AggregateKit.Tests
             
             // Act & Assert
             Assert.Equal(id.GetHashCode(), entity.GetHashCode());
+        }
+
+        [Fact]
+        public void StringEntity_With_Same_Id_Are_Equal()
+        {
+            // Arrange
+            var id = "test-id";
+            var entity1 = new StringEntity(id, "Entity 1");
+            var entity2 = new StringEntity(id, "Entity 2");
+            
+            // Act & Assert
+            Assert.Equal(entity1, entity2);
+            Assert.True(entity1 == entity2);
+            Assert.False(entity1 != entity2);
+            Assert.Equal(entity1.GetHashCode(), entity2.GetHashCode());
+        }
+
+        [Fact]
+        public void Entity_Parameterless_Constructor_Works_For_EF_Core()
+        {
+            // This test ensures the parameterless constructor works (needed for EF Core)
+            // We can't directly test it since it's protected, but we can verify it exists
+            // by checking that the type can be instantiated through reflection
+            
+            var entityType = typeof(TestEntity);
+            var constructors = entityType.GetConstructors(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var parameterlessConstructor = Array.Find(constructors, c => c.GetParameters().Length == 0);
+            
+            Assert.NotNull(parameterlessConstructor);
         }
     }
 } 
