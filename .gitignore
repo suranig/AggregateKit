@@ -294,3 +294,4 @@ artifacts/
 .vscode/
 *.swp
 *.*~
+nuget.config
