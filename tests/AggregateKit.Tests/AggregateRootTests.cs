@@ -32,6 +32,18 @@ namespace AggregateKit.Tests
             }
         }
 
+        private class TestEvent : DomainEventBase
+        {
+        }
+
+        private class TestAggregate : AggregateRoot<Guid>
+        {
+            public TestAggregate(Guid id) : base(id)
+            {
+                AddDomainEvent(new TestEvent());
+            }
+        }
+
         private class Article : AggregateRoot<Guid>
         {
             public string Title { get; private set; } = string.Empty;
@@ -111,5 +123,20 @@ namespace AggregateKit.Tests
             // Assert
             Assert.Empty(article.DomainEvents);
         }
+
+        [Fact]
+        public void DomainEvents_IsReadOnly()
+        {
+            // Arrange
+            var aggregate = new TestAggregate(Guid.NewGuid());
+
+            // Act
+            var events = aggregate.DomainEvents;
+            var collection = (ICollection<IDomainEvent>)events;
+
+            // Assert
+            Assert.Throws<NotSupportedException>(() => collection.Add(new TestEvent()));
+            Assert.Throws<NotSupportedException>(() => collection.Clear());
+        }
     }
-} 
+}
