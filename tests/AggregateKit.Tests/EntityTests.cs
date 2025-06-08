@@ -13,6 +13,17 @@ namespace AggregateKit.Tests
             {
                 Name = name;
             }
+
+            // For EF Core
+            private TestEntity() : base() 
+            {
+                Name = string.Empty;
+            }
+        }
+
+        private class DifferentEntity : Entity<Guid>
+        {
+            public DifferentEntity(Guid id) : base(id) { }
         }
 
         [Fact]
@@ -87,6 +98,98 @@ namespace AggregateKit.Tests
         {
             // Act & Assert
             Assert.Throws<ArgumentException>(() => new TestEntity(Guid.Empty, "Entity"));
+        }
+
+        [Fact]
+        public void Entity_Constructor_Validates_Id_Parameter()
+        {
+            // This test verifies that the constructor properly validates the id parameter
+            // Since Guid is a value type, we can't pass null directly, but we can test with default
+            // The ArgumentNullException.ThrowIfNull will be called for reference types
+            
+            // Act & Assert - Test with default value which should throw ArgumentException
+            Assert.Throws<ArgumentException>(() => new TestEntity(default(Guid), "Entity"));
+        }
+
+        [Fact]
+        public void Entity_IEquatable_Equals_Returns_True_For_Same_Id()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var entity1 = new TestEntity(id, "Entity 1");
+            var entity2 = new TestEntity(id, "Entity 2");
+            
+            // Act & Assert
+            Assert.True(((IEquatable<Entity<Guid>>)entity1).Equals(entity2));
+        }
+
+        [Fact]
+        public void Entity_IEquatable_Equals_Returns_False_For_Null()
+        {
+            // Arrange
+            var entity = new TestEntity(Guid.NewGuid(), "Entity");
+            
+            // Act & Assert
+            Assert.False(((IEquatable<Entity<Guid>>)entity).Equals(null));
+        }
+
+        [Fact]
+        public void Entity_IEquatable_Equals_Returns_False_For_Different_Types()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var testEntity = new TestEntity(id, "Entity");
+            var differentEntity = new DifferentEntity(id);
+            
+            // Act & Assert
+            Assert.False(((IEquatable<Entity<Guid>>)testEntity).Equals(differentEntity));
+        }
+
+        [Fact]
+        public void Entity_IEquatable_Equals_Returns_True_For_Same_Reference()
+        {
+            // Arrange
+            var entity = new TestEntity(Guid.NewGuid(), "Entity");
+            
+            // Act & Assert
+            Assert.True(((IEquatable<Entity<Guid>>)entity).Equals(entity));
+        }
+
+        [Fact]
+        public void Entity_Operators_Handle_Both_Null()
+        {
+            // Arrange
+            TestEntity? entity1 = null;
+            TestEntity? entity2 = null;
+            
+            // Act & Assert
+            Assert.True(entity1 == entity2);
+            Assert.False(entity1 != entity2);
+        }
+
+        [Fact]
+        public void Entity_Operators_Handle_One_Null()
+        {
+            // Arrange
+            var entity = new TestEntity(Guid.NewGuid(), "Entity");
+            TestEntity? nullEntity = null;
+            
+            // Act & Assert
+            Assert.False(entity == nullEntity);
+            Assert.False(nullEntity == entity);
+            Assert.True(entity != nullEntity);
+            Assert.True(nullEntity != entity);
+        }
+
+        [Fact]
+        public void Entity_GetHashCode_Uses_Id_HashCode()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var entity = new TestEntity(id, "Entity");
+            
+            // Act & Assert
+            Assert.Equal(id.GetHashCode(), entity.GetHashCode());
         }
     }
 } 
