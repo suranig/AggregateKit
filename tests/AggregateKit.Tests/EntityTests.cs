@@ -245,12 +245,21 @@ namespace AggregateKit.Tests
             // This test ensures the parameterless constructor works (needed for EF Core)
             // We can't directly test it since it's protected, but we can verify it exists
             // by checking that the type can be instantiated through reflection
-            
+
             var entityType = typeof(TestEntity);
             var constructors = entityType.GetConstructors(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var parameterlessConstructor = Array.Find(constructors, c => c.GetParameters().Length == 0);
-            
+
             Assert.NotNull(parameterlessConstructor);
         }
+
+        [Fact]
+        public void Entity_ParameterlessConstructor_CanInstantiate()
+        {
+            var entity = new ParameterlessEntity();
+
+            Assert.NotNull(entity);
+            Assert.Equal(default(Guid), entity.Id);
+        }
     }
-} 
+}
